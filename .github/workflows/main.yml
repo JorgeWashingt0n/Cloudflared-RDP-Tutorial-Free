@@ -1,0 +1,119 @@
+# Cloudflare Tunnel Configuration File (config.yaml)
+
+# MAIN Tunnel settings
+# Tunnel UUID
+tunnel: 0f0fff0f-6969-9f00-yt22-867d5po62p0p
+# Path to .json file you get after you finish logging in
+credentials-file: C:\Users\(your name)\.cloudflared\0f0fff0f-6969-9f00-yt22-867d5po62p0p.json
+# Global options, optional
+originRequest: # Optional
+    noTLSVerify: true # Optional
+
+# Ingress top level heading required
+ingress: 
+
+  # Subdomain Template, "-" two spaces from edge
+  # "s" in service: two spaces from "-"
+  # ------------------------------
+  - hostname: subdomain.example.com
+    service: proto://xxx.xxx.x.xx:port
+  # ------------------------------
+  
+# Pretty comment format obviously optional
+  # ============================
+  # ||    SERVICES ROUTING    ||
+  # ============================
+
+  # ====================================
+  # ||    Host 1    (192.168.1.99)    ||
+  # ===================================
+
+
+
+  # Prowlarr
+  # ------------------------------
+  - hostname: prowlarr.example.com
+    service: http://192.168.1.99:9696
+  # ------------------------------
+
+  # Radarr
+  # ------------------------------
+  - hostname: radarr.example.com
+    service: http://192.168.1.99:7878
+  # ------------------------------
+
+  # Sonarr
+  # ------------------------------
+  - hostname: sonarr.example.com
+    service: http://192.168.1.99:8989
+  # ------------------------------
+
+
+  # =====================================
+  # ||    Host 2    (192.168.1.199)    ||
+  # ====================================
+
+   # Lidarr
+  # ------------------------------
+  - hostname: lidarr.example.com
+    service: http://192.168.1.199:8686
+    originRequest:             
+      noTLSVerify: true
+  # ------------------------------
+
+
+  # =============================
+  # ||    RDP AND SSH RULES    ||
+  # ============================
+
+  # RDP & SSH Rules for Host 1
+  # (192.168.1.99)
+  # ------------------------------
+  - hostname: ssh.example.com
+    service: ssh://localhost:22
+  # ------------------------------
+  - hostname: rdp.example.com
+    service: rdp://localhost:3389
+  # ------------------------------
+
+
+  # RDP & SSH Rules for Host 2
+  # (192.168.1.199)
+  # Note if you change the default ports for
+  # security reasons, make sure you list the
+  # correct port here
+  # ------------------------------
+  - hostname: rdp2.example.com
+    service: rdp://192.168.1.199:43389
+  # --------------------------
+  - hostname: ssh2.example.com
+    service: ssh://192.168.1.199:6922
+  # ------------------------------
+ 
+
+  # ===================================
+
+  # Wildcard gets sent to my reverse proxy so any subdomain i use that isnt on here still gets routed, optional
+  # Note quotes bexause of wildcard
+  - hostname: "*.example.com"
+    service: http://192.168.1.199:8080
+    originRequest:           
+        noTLSVerify: true
+ 
+
+  # ------------------------------
+  - hostname: example.com
+    service: http://192.168.1.199:8080
+    originRequest:                 
+        noTLSVerify: true
+
+  # Catch-all Rule required
+  # --------------
+  - service: http_status:404
+
+# Logging and Maintenance
+# ========================
+logfile: C:\logs\cflarelogs.txt
+loglevel: debug
+no-autoupdate: true
+metrics: localhost: 
